@@ -1,0 +1,4 @@
+#Requirments Dependencies for RiceQuant
+bs4
+selenium
+pandas
