@@ -10,7 +10,7 @@ class RiceQuant:
     def __init__(self):
         self._url = 'https://www.ricequant.com/notification/pt/%s?entryDate=%s&startTime=%s&endTime=%s'
         options = webdriver.ChromeOptions()
-        #options.add_argument('--headless')
+        options.add_argument('--headless')
         self.driver = webdriver.Chrome(chrome_options=options)
 
     def Login(self, username, pwd, strategyId):
