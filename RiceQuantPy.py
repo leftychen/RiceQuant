@@ -8,14 +8,16 @@ import time
 class RiceQuant:
 
     def __init__(self):
-        self._url = 'https://www.ricequant.com/notification/pt/2593359?entryDate=%s&startTime=%s&endTime=%s'
+        self._url = 'https://www.ricequant.com/notification/pt/%s?entryDate=%s&startTime=%s&endTime=%s'
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
+        #options.add_argument('--headless')
         self.driver = webdriver.Chrome(chrome_options=options)
 
-    def Login(self, username, pwd):
+    def Login(self, username, pwd, strategyId):
         self.username = username
         self.pwd = pwd
+        self.strategyId = strategyId
+
 
     def GetData(self, dt):
         datestr = dt.date().strftime('%Y%m%d')
@@ -25,9 +27,9 @@ class RiceQuant:
         min_1 = (dt - datetime.timedelta(seconds = 60)).time().minute
         startTime = str(hour_1) + str(min_1).zfill(2) + '00000'
         endTime = str(hour) + str(minutes).zfill(2) + '00000'
-        url = self._url % (datestr, startTime, endTime)
+        url = self._url % (self.strategyId, datestr, startTime, endTime)
         self.driver.get(url)
-        time.sleep(4)
+        time.sleep(8)
 
         usernames = self.driver.find_elements_by_xpath("//input[@name='newusername'] [@type='text']")
         for user in usernames:
@@ -51,7 +53,7 @@ class RiceQuant:
         submit = self.driver.find_element_by_xpath("//input[@value='登录'] [@type='submit']")
         self.driver.execute_script("arguments[0].style.visibility = 'visible';", submit)
         submit.submit()
-        time.sleep(8)
+        time.sleep(12)
         html = self.driver.page_source
         soup = BeautifulSoup(html, 'lxml')
         table = soup.find('table')
@@ -62,6 +64,6 @@ class RiceQuant:
 if __name__ == "__main__":
     dt = datetime.datetime(2018,3,9,23,00,00)
     rq = RiceQuant()
-    rq.Login('15950076835', 'ljh121005783')
+    rq.Login('15950076835', 'ljh121005783', '2593359')
     data = rq.GetData(dt)
     print(data)
